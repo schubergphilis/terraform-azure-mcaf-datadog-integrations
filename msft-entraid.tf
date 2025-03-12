@@ -109,4 +109,30 @@ resource "azuread_service_principal" "datadog_saml_auth_enterprise_application" 
   }
 }
 
+resource "azuread_claims_mapping_policy" "datadog_saml_auth_claims_mapping_policy" {
+  display_name = "datadog-saml-auth-claims-mapping-policy"
+  definition = [
+    jsonencode(
+      {
+        "ClaimsMappingPolicy" = {
+          "Version" = 1,
+          "IncludeBasicClaimSet" = "true",
+          "ClaimsSchema" = [
+            {
+              samlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+              source        = "user",
+              id            = "mail"
+            }
+          ]
+        }
+      }
+    )
+  ]
+}
+
+resource "azuread_service_principal_claims_mapping_policy_assignment" "app" {
+  claims_mapping_policy_id = one(azuread_claims_mapping_policy.datadog_saml_auth_claims_mapping_policy).id
+  service_principal_id     = azuread_service_principal.datadog_saml_auth_enterprise_application.id
+}
+
 # Block 2: End.
