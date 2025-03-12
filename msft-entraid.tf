@@ -131,7 +131,7 @@ resource "azuread_claims_mapping_policy" "datadog_saml_auth_claims_mapping_polic
 }
 
 resource "azuread_service_principal_claims_mapping_policy_assignment" "app" {
-  claims_mapping_policy_id = one(azuread_claims_mapping_policy.datadog_saml_auth_claims_mapping_policy).id
+  claims_mapping_policy_id = azuread_claims_mapping_policy.datadog_saml_auth_claims_mapping_policy.id
   service_principal_id     = azuread_service_principal.datadog_saml_auth_enterprise_application.id
 }
 
