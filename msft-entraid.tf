@@ -104,6 +104,9 @@ resource "azuread_service_principal" "datadog_saml_auth_enterprise_application" 
   app_role_assignment_required  = true
   login_url                     = "${local.datadog_app_url}/account/login/id/${datadog_organization_settings.organization.id}"
   preferred_single_sign_on_mode = "saml"
+  feature_tags {
+    custom_single_sign_on = true
+  }
 }
 
 # Block 2: End.
