@@ -43,7 +43,6 @@ resource "azuread_application" "datadog_saml_auth_application_registration" {
   display_name            = "datadog-saml-auth"
   owners                  = [data.azurerm_client_config.current.object_id]
   group_membership_claims = ["ApplicationGroup"]
-  #identifier_uris = local.entraid_datadog_application_saml_identifier_uris
 
   api {
     known_client_applications      = []
