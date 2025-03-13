@@ -121,7 +121,7 @@ resource "azuread_claims_mapping_policy" "datadog_saml_auth_claims_mapping_polic
           "IncludeBasicClaimSet" = "true",
           "ClaimsSchema" = [
             {
-              samlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims",
+              samlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
               source        = "user.mail",
               id            = "emailaddress"
             }
