@@ -107,6 +107,7 @@ resource "azuread_service_principal" "datadog_saml_auth_enterprise_application" 
   preferred_single_sign_on_mode = "saml"
   feature_tags {
     custom_single_sign_on = true
+    enterprise = true
   }
 
 }
