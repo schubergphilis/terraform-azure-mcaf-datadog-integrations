@@ -102,11 +102,13 @@ resource "azuread_application" "datadog_saml_auth_application_registration" {
 resource "azuread_service_principal" "datadog_saml_auth_enterprise_application" {
   client_id                     = azuread_application.datadog_saml_auth_application_registration.client_id
   app_role_assignment_required  = true
+  service_principal_names       = local.entraid_datadog_application_saml_identifier_uris
   login_url                     = "${local.datadog_app_url}/account/login/id/${datadog_organization_settings.organization.id}"
   preferred_single_sign_on_mode = "saml"
   feature_tags {
     custom_single_sign_on = true
   }
+
 }
 
 resource "azuread_claims_mapping_policy" "datadog_saml_auth_claims_mapping_policy" {
@@ -115,13 +117,13 @@ resource "azuread_claims_mapping_policy" "datadog_saml_auth_claims_mapping_polic
     jsonencode(
       {
         "ClaimsMappingPolicy" = {
-          "Version" = 1,
+          "Version"              = 1,
           "IncludeBasicClaimSet" = "true",
           "ClaimsSchema" = [
             {
-              samlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
-              source        = "user",
-              id            = "mail"
+              samlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims",
+              source        = "user.mail",
+              id            = "emailaddress"
             }
           ]
         }
