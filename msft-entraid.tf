@@ -102,7 +102,7 @@ resource "azuread_application" "datadog_saml_auth_application_registration" {
 resource "azuread_service_principal" "datadog_saml_auth_enterprise_application" {
   client_id                     = azuread_application.datadog_saml_auth_application_registration.client_id
   app_role_assignment_required  = true
-  service_principal_names       = local.entraid_datadog_application_saml_identifier_uris
+  #service_principal_names       = local.entraid_datadog_application_saml_identifier_uris
   login_url                     = "${local.datadog_app_url}/account/login/id/${datadog_organization_settings.organization.id}"
   preferred_single_sign_on_mode = "saml"
   feature_tags {
