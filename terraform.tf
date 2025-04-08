@@ -3,7 +3,7 @@ terraform {
   required_providers {
     datadog = {
       source  = "datadog/datadog"
-      version = "~> 3.0.0"
+      version = "~> 3.59"
     }
     azurerm = {
       source  = "hashicorp/azurerm"
