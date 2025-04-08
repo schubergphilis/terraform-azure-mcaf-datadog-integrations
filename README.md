@@ -8,7 +8,7 @@
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9 |
 | <a name="requirement_azuread"></a> [azuread](#requirement\_azuread) | ~> 2.53.1 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 4 |
-| <a name="requirement_datadog"></a> [datadog](#requirement\_datadog) | ~> 3.0.0 |
+| <a name="requirement_datadog"></a> [datadog](#requirement\_datadog) | ~> 3.59 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >=0.13 |
 
 ## Providers
@@ -17,7 +17,7 @@
 |------|---------|
 | <a name="provider_azuread"></a> [azuread](#provider\_azuread) | ~> 2.53.1 |
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 4 |
-| <a name="provider_datadog"></a> [datadog](#provider\_datadog) | ~> 3.0.0 |
+| <a name="provider_datadog"></a> [datadog](#provider\_datadog) | ~> 3.59 |
 | <a name="provider_time"></a> [time](#provider\_time) | >=0.13 |
 
 ## Modules
