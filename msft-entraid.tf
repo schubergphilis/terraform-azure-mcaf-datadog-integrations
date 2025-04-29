@@ -1,7 +1,7 @@
 # Block 1: Create a new Azure AD application for Datadog Metric Collection
 
 resource "azuread_application" "application" {
-  display_name = "datadog-monitoring"
+  display_name    = "datadog-monitoring"
   identifier_uris = ["https://app.datadoghq.eu/account/saml/metadata.xml"]
   required_resource_access {
     resource_app_id = "00000003-0000-0000-c000-000000000000"
@@ -78,9 +78,20 @@ resource "azuread_application" "datadog_saml_auth_application_registration" {
 
   optional_claims {
     saml2_token {
-      additional_properties = []
-      essential             = false
-      name                  = "groups"
+      name      = "groups"
+      essential = false
+    }
+    saml2_token {
+      name      = "givenname"
+      essential = false
+    }
+    saml2_token {
+      name      = "surname"
+      essential = false
+    }
+    saml2_token {
+      name      = "name"
+      essential = false
     }
   }
 
@@ -103,14 +114,8 @@ resource "azuread_application" "datadog_saml_auth_application_registration" {
 resource "azuread_service_principal" "datadog_saml_auth_enterprise_application" {
   client_id                     = azuread_application.datadog_saml_auth_application_registration.client_id
   app_role_assignment_required  = true
-  #service_principal_names       = local.entraid_datadog_application_saml_identifier_uris
   login_url                     = "${local.datadog_app_url}/account/login/id/${datadog_organization_settings.organization.id}"
   preferred_single_sign_on_mode = "saml"
-  feature_tags {
-    custom_single_sign_on = true
-    enterprise = true
-  }
-
 }
 
 resource "azuread_claims_mapping_policy" "datadog_saml_auth_claims_mapping_policy" {
@@ -131,6 +136,26 @@ resource "azuread_claims_mapping_policy" "datadog_saml_auth_claims_mapping_polic
               samlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
               source        = "User",
               id            = "userprincipalname"
+            },
+            {
+              samlClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/groups"
+              source        = "User"
+              id            = "groups"
+            },
+            {
+              samlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"
+              source        = "User"
+              id            = "givenname"
+            },
+            {
+              samlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"
+              source        = "User"
+              id            = "surname"
+            },
+            {
+              samlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+              source        = "User"
+              id            = "userprincipalname"
             }
           ]
         }
@@ -139,9 +164,23 @@ resource "azuread_claims_mapping_policy" "datadog_saml_auth_claims_mapping_polic
   ]
 }
 
+
 resource "azuread_service_principal_claims_mapping_policy_assignment" "app" {
   claims_mapping_policy_id = azuread_claims_mapping_policy.datadog_saml_auth_claims_mapping_policy.id
   service_principal_id     = azuread_service_principal.datadog_saml_auth_enterprise_application.id
 }
 
 # Block 2: End.
+
+# Block 3: Generate and attach a SAML signing certificate to the Datadog enterprise app (service principal)
+resource "azuread_service_principal" "datadog_saml_auth_enterprise_application" {
+  client_id                     = azuread_application.datadog_saml_auth_application_registration.client_id
+  app_role_assignment_required  = true
+  preferred_single_sign_on_mode = "saml"
+  notification_email_addresses  = [var.saml_certificate_notification_email]
+}
+output "datadog_federation_metadata_url" {
+  value = "https://login.microsoftonline.com/${data.azuread_client_config.current.tenant_id}/federationmetadata/2007-06/federationmetadata.xml?appid=${azuread_application.datadog_saml_auth_application_registration.application_id}"
+}
+
+# Block 3: End.
