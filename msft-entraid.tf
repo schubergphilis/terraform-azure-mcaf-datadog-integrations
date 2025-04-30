@@ -116,6 +116,7 @@ resource "azuread_service_principal" "datadog_saml_auth_enterprise_application" 
   app_role_assignment_required  = true
   login_url                     = "${local.datadog_app_url}/account/login/id/${datadog_organization_settings.organization.id}"
   preferred_single_sign_on_mode = "saml"
+  notification_email_addresses  = [var.saml_certificate_notification_email]
 }
 
 resource "azuread_claims_mapping_policy" "datadog_saml_auth_claims_mapping_policy" {
@@ -170,17 +171,9 @@ resource "azuread_service_principal_claims_mapping_policy_assignment" "app" {
   service_principal_id     = azuread_service_principal.datadog_saml_auth_enterprise_application.id
 }
 
-# Block 2: End.
-
-# Block 3: Generate and attach a SAML signing certificate to the Datadog enterprise app (service principal)
-resource "azuread_service_principal" "datadog_saml_auth_enterprise_application" {
-  client_id                     = azuread_application.datadog_saml_auth_application_registration.client_id
-  app_role_assignment_required  = true
-  preferred_single_sign_on_mode = "saml"
-  notification_email_addresses  = [var.saml_certificate_notification_email]
-}
+# This URL will expose the SAML token signing certificate, its thumbprint, expiry, etc., and allow Datadog to download the Base64/Raw cert from Azure.
 output "datadog_federation_metadata_url" {
   value = "https://login.microsoftonline.com/${data.azuread_client_config.current.tenant_id}/federationmetadata/2007-06/federationmetadata.xml?appid=${azuread_application.datadog_saml_auth_application_registration.application_id}"
 }
 
-# Block 3: End.
+# Block 2: End.
