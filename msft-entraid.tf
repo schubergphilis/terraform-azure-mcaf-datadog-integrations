@@ -25,7 +25,7 @@ resource "azuread_service_principal" "spn" {
 }
 
 resource "time_rotating" "rotation" {
-  rotation_days = 60
+  rotation_days = 365
 }
 
 resource "azuread_service_principal_password" "sp_password" {
