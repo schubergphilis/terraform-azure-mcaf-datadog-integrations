@@ -2,7 +2,6 @@
 
 resource "azuread_application" "application" {
   display_name    = "datadog-monitoring"
-  identifier_uris = ["https://app.datadoghq.eu/account/saml/metadata.xml"]
   required_resource_access {
     resource_app_id = "00000003-0000-0000-c000-000000000000"
     resource_access {
@@ -25,7 +24,7 @@ resource "azuread_service_principal" "spn" {
 }
 
 resource "time_rotating" "rotation" {
-  rotation_days = 365
+  rotation_days = 60
 }
 
 resource "azuread_service_principal_password" "sp_password" {
