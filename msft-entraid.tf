@@ -23,9 +23,9 @@ resource "azuread_service_principal" "spn" {
   ]
 }
 
-# resource "time_rotating" "rotation" {
-#   rotation_days = 60
-# }
+resource "time_rotating" "rotation" {
+  rotation_days = 60
+}
 
 # resource "azuread_service_principal_password" "sp_password" {
 #   display_name         = "datadog-service-principal-password"
