@@ -24,16 +24,16 @@ resource "azuread_service_principal" "spn" {
 }
 
 resource "time_rotating" "rotation" {
-  rotation_days = 60
+  rotation_days = 365
 }
 
-# resource "azuread_service_principal_password" "sp_password" {
-#   display_name         = "datadog-service-principal-password"
-#   service_principal_id = azuread_service_principal.spn.object_id
-#   rotate_when_changed = {
-#     rotation = time_rotating.rotation.id
-#   }
-# }
+resource "azuread_service_principal_password" "sp_password" {
+  display_name         = "datadog-service-principal-password"
+  service_principal_id = azuread_service_principal.spn.object_id
+  rotate_when_changed = {
+    rotation = time_rotating.rotation.id
+  }
+}
 
 # Block 1: End.
 
