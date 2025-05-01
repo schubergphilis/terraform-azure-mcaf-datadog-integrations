@@ -2,8 +2,7 @@
 resource "datadog_integration_azure" "this" {
   tenant_name              = data.azurerm_client_config.current.tenant_id
   client_id                = azuread_application.application.client_id
-  client_secret            = "placeHolder"
-#  client_secret            = azuread_service_principal_password.sp_password.value next run
+  client_secret            = azuread_service_principal_password.sp_password.value next run
   host_filters             = var.datadog_integration_azure_config.host_filters
   app_service_plan_filters = var.datadog_integration_azure_config.app_service_plan_filters
   container_app_filters    = var.datadog_integration_azure_config.container_app_filters
