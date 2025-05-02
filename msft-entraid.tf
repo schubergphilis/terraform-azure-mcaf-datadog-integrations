@@ -60,6 +60,7 @@ resource "azuread_application" "datadog_saml_auth_application_registration" {
       value                      = "user_impersonation"
     }
   }
+
   app_role {
     allowed_member_types = ["User"]
     description          = "User"
@@ -67,6 +68,7 @@ resource "azuread_application" "datadog_saml_auth_application_registration" {
     enabled              = true
     id                   = "cb86c681-9dfb-4580-9d9a-303863de3d91"
   }
+
   app_role {
     allowed_member_types = ["User"]
     description          = "msiam_access"
@@ -78,18 +80,6 @@ resource "azuread_application" "datadog_saml_auth_application_registration" {
   optional_claims {
     saml2_token {
       name      = "groups"
-      essential = false
-    }
-    saml2_token {
-      name      = "givenname"
-      essential = false
-    }
-    saml2_token {
-      name      = "surname"
-      essential = false
-    }
-    saml2_token {
-      name      = "name"
       essential = false
     }
   }
@@ -116,62 +106,27 @@ resource "azuread_service_principal" "datadog_saml_auth_enterprise_application" 
   login_url                     = "${local.datadog_app_url}/account/login/id/${datadog_organization_settings.organization.id}"
   preferred_single_sign_on_mode = "saml"
   notification_email_addresses  = [var.saml_certificate_notification_email]
+
+  feature_tags {
+    enterprise            = true
+    custom_single_sign_on = true
+  }
 }
 
-resource "azuread_claims_mapping_policy" "datadog_saml_auth_claims_mapping_policy" {
-  display_name = "datadog-saml-auth-claims-mapping-policy"
-  definition = [
-    jsonencode(
-      {
-        "ClaimsMappingPolicy" = {
-          "Version"              = 1,
-          "IncludeBasicClaimSet" = "true",
-          "ClaimsSchema" = [
-            {
-              samlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
-              source        = "User",
-              id            = "mail"
-            },
-            {
-              samlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
-              source        = "User",
-              id            = "userprincipalname"
-            },
-            {
-              samlClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/groups"
-              source        = "User"
-              id            = "groups"
-            },
-            {
-              samlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"
-              source        = "User"
-              id            = "givenname"
-            },
-            {
-              samlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"
-              source        = "User"
-              id            = "surname"
-            },
-            {
-              samlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-              source        = "User"
-              id            = "userprincipalname"
-            }
-          ]
-        }
-      }
-    )
-  ]
+# Assigning a managed identity to the Enterprise App (via display name)
+resource "azuread_app_role_assignment" "mi_datadog_assignment" {
+  principal_object_id = data.azuread_service_principal.managed_identity.id
+  resource_object_id  = azuread_service_principal.datadog_saml_auth_enterprise_application.object_id
+  app_role_id         = azuread_service_principal.datadog_saml_auth_enterprise_application.app_role_ids["User"]
 }
 
-
-resource "azuread_service_principal_claims_mapping_policy_assignment" "app" {
-  claims_mapping_policy_id = azuread_claims_mapping_policy.datadog_saml_auth_claims_mapping_policy.id
-  service_principal_id     = azuread_service_principal.datadog_saml_auth_enterprise_application.id
+# Self-signing the SAML certificate
+resource "azuread_service_principal_token_signing_certificate" "saml_cert" {
+  service_principal_id = azuread_service_principal.datadog_saml_auth_enterprise_application.object_id
 }
 
-# This URL will expose the SAML token signing certificate, its thumbprint, expiry, etc., and allow Datadog to download the Base64/Raw cert from Azure.
-output "datadog_federation_metadata_url" {
+# Federation Metadata URL
+output "datadog_saml_federation_metadata_url" {
   value = "https://login.microsoftonline.com/${data.azuread_client_config.current.tenant_id}/federationmetadata/2007-06/federationmetadata.xml?appid=${azuread_application.datadog_saml_auth_application_registration.application_id}"
 }
 

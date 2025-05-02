@@ -117,3 +117,8 @@ variable "saml_certificate_notification_email" {
   type        = string
   description = "Notification email for the Enterprise application's SAML's certificate"
 }
+
+variable "managed_identity_display_name" {
+  type        = string
+  description = "The display name of the user assigned managed identity"
+}
