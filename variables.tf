@@ -121,6 +121,11 @@ variable "saml_certificate_end_date" {
     error_message = "Must be a valid UTC ISO 8601 timestamp, like 2028-05-07T00:00:00Z"
   }
 }
+variable "saml_autocreate_access_role" {
+  description = "Optional Datadog SAML role"
+  type        = string
+  default     = ""
+}
 
 # variable "managed_identity_display_name" {
 #   type        = string
