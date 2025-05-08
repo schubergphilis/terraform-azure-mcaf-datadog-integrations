@@ -78,12 +78,27 @@ resource "azuread_application" "datadog_saml_auth_application_registration" {
     id                   = "420578d9-e592-46f2-8e9e-c537e5e5ce76"
   }
 
-  # optional_claims {
-  #   saml2_token {
-  #     name      = "groups"
-  #     essential = false
-  #   }
-  # }
+  optional_claims {
+    saml2_token {
+      name = "email"
+    }
+    saml2_token {
+      name = "userprincipalname"
+    }
+    saml2_token {
+      name = "groups"
+    }
+    saml2_token {
+      name = "givenname"
+    }
+    saml2_token {
+      name = "surname"
+    }
+    saml2_token {
+      name = "name"
+    }
+  }
+
   web {
     homepage_url = "${local.datadog_app_url}/account/saml/assertion?metadata=datadog|ISV9.1|primary|z"
     redirect_uris = [
@@ -110,59 +125,59 @@ resource "azuread_service_principal" "datadog_saml_auth_enterprise_application" 
     custom_single_sign_on = true
   }
 }
-resource "azuread_claims_mapping_policy" "datadog_saml_auth_claims_mapping_policy" {
-  display_name = "datadog-saml-auth-claims-mapping-policy"
-  definition = [jsonencode({
-    ClaimsMappingPolicy = {
-      Version              = 1
-      IncludeBasicClaimSet = false
-      ClaimsSchema = [
-        # Required claim: email address
-        {
-          Source        = "user"
-          ID            = "mail"
-          SamlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
-        },
+# resource "azuread_claims_mapping_policy" "datadog_saml_auth_claims_mapping_policy" {
+#   display_name = "datadog-saml-auth-claims-mapping-policy"
+#   definition = [jsonencode({
+#     ClaimsMappingPolicy = {
+#       Version              = 1
+#       IncludeBasicClaimSet = false
+#       ClaimsSchema = [
+#         # Required claim: email address
+#         {
+#           Source        = "user"
+#           ID            = "mail"
+#           SamlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+#         },
 
-        # Name ID: user.userprincipalname with email format
-        {
-          Source                   = "user"
-          ID                       = "userPrincipalName"
-          SamlClaimType            = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-          SamlNameIdentifierFormat = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
-        },
+#         # Name ID: user.userprincipalname with email format
+#         {
+#           Source                   = "user"
+#           ID                       = "userPrincipalName"
+#           SamlClaimType            = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+#           SamlNameIdentifierFormat = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+#         },
 
-        # Additional claim: groups
-        {
-          Source        = "user"
-          ID            = "groups"
-          SamlClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/groups"
-        },
+#         # Additional claim: groups
+#         {
+#           Source        = "user"
+#           ID            = "groups"
+#           SamlClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/groups"
+#         },
 
-        # Additional claim: given name
-        {
-          Source        = "user"
-          ID            = "givenName"
-          SamlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"
-        },
+#         # Additional claim: given name
+#         {
+#           Source        = "user"
+#           ID            = "givenName"
+#           SamlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"
+#         },
 
-        # Additional claim: name
-        {
-          Source        = "user"
-          ID            = "userPrincipalName"
-          SamlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
-        },
+#         # Additional claim: name
+#         {
+#           Source        = "user"
+#           ID            = "userPrincipalName"
+#           SamlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+#         },
 
-        # Additional claim: surname
-        {
-          Source        = "user"
-          ID            = "surname"
-          SamlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"
-        }
-      ]
-    }
-  })]
-}
+#         # Additional claim: surname
+#         {
+#           Source        = "user"
+#           ID            = "surname"
+#           SamlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"
+#         }
+#       ]
+#     }
+#   })]
+# }
 resource "azuread_service_principal_claims_mapping_policy_assignment" "app" {
   claims_mapping_policy_id = azuread_claims_mapping_policy.datadog_saml_auth_claims_mapping_policy.id
   service_principal_id     = azuread_service_principal.datadog_saml_auth_enterprise_application.id
