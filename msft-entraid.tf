@@ -1,7 +1,7 @@
 # Block 1: Create a new Azure AD application for Datadog Metric Collection
 
 resource "azuread_application" "application" {
-  display_name    = "datadog-monitoring"
+  display_name = "datadog-monitoring"
   required_resource_access {
     resource_app_id = "00000003-0000-0000-c000-000000000000"
     resource_access {
@@ -41,6 +41,7 @@ resource "azuread_service_principal_password" "sp_password" {
 
 resource "azuread_application" "datadog_saml_auth_application_registration" {
   display_name            = "datadog-saml-auth"
+  identifier_uris         = ["https://app.datadoghq.eu/account/saml/metadata.xml"]
   owners                  = [data.azurerm_client_config.current.object_id]
   group_membership_claims = ["ApplicationGroup"]
 
@@ -60,7 +61,6 @@ resource "azuread_application" "datadog_saml_auth_application_registration" {
       value                      = "user_impersonation"
     }
   }
-
   app_role {
     allowed_member_types = ["User"]
     description          = "User"
@@ -105,29 +105,77 @@ resource "azuread_service_principal" "datadog_saml_auth_enterprise_application" 
   app_role_assignment_required  = true
   login_url                     = "${local.datadog_app_url}/account/login/id/${datadog_organization_settings.organization.id}"
   preferred_single_sign_on_mode = "saml"
-  notification_email_addresses  = [var.saml_certificate_notification_email]
-
   feature_tags {
     enterprise            = true
     custom_single_sign_on = true
   }
 }
+resource "azuread_claims_mapping_policy" "datadog_saml_auth_claims_mapping_policy" {
+  display_name = "datadog-saml-auth-claims-mapping-policy"
+  definition = [jsonencode({
+    ClaimsMappingPolicy = {
+      Version              = 1
+      IncludeBasicClaimSet = false
+      ClaimsSchema = [
+        # Required claim: email address
+        {
+          Source         = "user"
+          ID             = "mail"
+          SamlClaimType  = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+        },
 
-# Assigning a managed identity to the Enterprise App (via display name)
-resource "azuread_app_role_assignment" "mi_datadog_assignment" {
-  principal_object_id = data.azuread_service_principal.managed_identity.id
-  resource_object_id  = azuread_service_principal.datadog_saml_auth_enterprise_application.object_id
-  app_role_id         = azuread_service_principal.datadog_saml_auth_enterprise_application.app_role_ids["User"]
+        # Name ID: user.userprincipalname with email format
+        {
+          Source              = "user"
+          ID                  = "userPrincipalName"
+          SamlClaimType       = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          SamlNameIdentifierFormat = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+        },
+
+        # Additional claim: groups
+        {
+          Source         = "user"
+          ID             = "groups"
+          SamlClaimType  = "http://schemas.microsoft.com/ws/2008/06/identity/claims/groups"
+        },
+
+        # Additional claim: given name
+        {
+          Source         = "user"
+          ID             = "givenName"
+          SamlClaimType  = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"
+        },
+
+        # Additional claim: name
+        {
+          Source         = "user"
+          ID             = "userPrincipalName"
+          SamlClaimType  = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+        },
+
+        # Additional claim: surname
+        {
+          Source         = "user"
+          ID             = "surname"
+          SamlClaimType  = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"
+        }
+      ]
+    }
+  })]
+}
+resource "azuread_service_principal_claims_mapping_policy_assignment" "app" {
+  claims_mapping_policy_id = azuread_claims_mapping_policy.datadog_saml_auth_claims_mapping_policy.id
+  service_principal_id     = azuread_service_principal.datadog_saml_auth_enterprise_application.id
 }
 
-# Self-signing the SAML certificate
-resource "azuread_service_principal_token_signing_certificate" "saml_cert" {
-  service_principal_id = azuread_service_principal.datadog_saml_auth_enterprise_application.object_id
-}
 
-# Federation Metadata URL
-output "datadog_saml_federation_metadata_url" {
-  value = "https://login.microsoftonline.com/${data.azuread_client_config.current.tenant_id}/federationmetadata/2007-06/federationmetadata.xml?appid=${azuread_application.datadog_saml_auth_application_registration.application_id}"
+# Generate and assign a SAML token signing certificate
+resource "azuread_service_principal_token_signing_certificate" "saml_signing_cert" {
+  service_principal_id = azuread_service_principal.datadog_saml_auth_enterprise_application.id
+
+  display_name = "CN=Data Dog SSO Certificate"
+  end_date     = "2028-06-01T00:00:00Z"
 }
 
 # Block 2: End.
+

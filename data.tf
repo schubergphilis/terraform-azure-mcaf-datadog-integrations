@@ -34,8 +34,3 @@ data "azurerm_key_vault_secret" "opsgenie_api_key" {
 data "datadog_permissions" "current" {
   include_restricted = true
 }
-
-data "azuread_client_config" "current" {}
-data "azuread_service_principal" "managed_identity" {
-  display_name = var.managed_identity_display_name
-}

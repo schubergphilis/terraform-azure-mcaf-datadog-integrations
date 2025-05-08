@@ -113,12 +113,7 @@ variable "saml_autocreate_access_role" {
     error_message = "Valid value is one of the following: `ro`, `st`, `adm`, `ERROR`"
   }
 }
-variable "saml_certificate_notification_email" {
-  type        = string
-  description = "Notification email for the Enterprise application's SAML's certificate"
-}
-
-variable "managed_identity_display_name" {
-  type        = string
-  description = "The display name of the user assigned managed identity"
-}
+# variable "managed_identity_display_name" {
+#   type        = string
+#   description = "The display name of the user assigned managed identity"
+# }
