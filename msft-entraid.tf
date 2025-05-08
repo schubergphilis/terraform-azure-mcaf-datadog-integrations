@@ -77,13 +77,12 @@ resource "azuread_application" "datadog_saml_auth_application_registration" {
     id                   = "420578d9-e592-46f2-8e9e-c537e5e5ce76"
   }
 
-  optional_claims {
-    saml2_token {
-      name      = "groups"
-      essential = false
-    }
-  }
-
+  # optional_claims {
+  #   saml2_token {
+  #     name      = "groups"
+  #     essential = false
+  #   }
+  # }
   web {
     homepage_url = "${local.datadog_app_url}/account/saml/assertion?metadata=datadog|ISV9.1|primary|z"
     redirect_uris = [
