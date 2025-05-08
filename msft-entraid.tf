@@ -40,8 +40,8 @@ resource "azuread_service_principal_password" "sp_password" {
 # Block 2: Create a new Azure AD application for Datadog SAML SSO
 
 resource "azuread_application" "datadog_saml_auth_application_registration" {
-  display_name            = "datadog-saml-auth"
-#  identifier_uris         = ["https://app.datadoghq.eu/account/saml/metadata.xml"]
+  display_name = "datadog-saml-auth"
+  #  identifier_uris         = ["https://app.datadoghq.eu/account/saml/metadata.xml"]
   owners                  = [data.azurerm_client_config.current.object_id]
   group_membership_claims = ["ApplicationGroup"]
 
@@ -119,45 +119,45 @@ resource "azuread_claims_mapping_policy" "datadog_saml_auth_claims_mapping_polic
       ClaimsSchema = [
         # Required claim: email address
         {
-          Source         = "user"
-          ID             = "mail"
-          SamlClaimType  = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+          Source        = "user"
+          ID            = "mail"
+          SamlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
         },
 
         # Name ID: user.userprincipalname with email format
         {
-          Source              = "user"
-          ID                  = "userPrincipalName"
-          SamlClaimType       = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          Source                   = "user"
+          ID                       = "userPrincipalName"
+          SamlClaimType            = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
           SamlNameIdentifierFormat = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
         },
 
         # Additional claim: groups
         {
-          Source         = "user"
-          ID             = "groups"
-          SamlClaimType  = "http://schemas.microsoft.com/ws/2008/06/identity/claims/groups"
+          Source        = "user"
+          ID            = "groups"
+          SamlClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/groups"
         },
 
         # Additional claim: given name
         {
-          Source         = "user"
-          ID             = "givenName"
-          SamlClaimType  = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"
+          Source        = "user"
+          ID            = "givenName"
+          SamlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"
         },
 
         # Additional claim: name
         {
-          Source         = "user"
-          ID             = "userPrincipalName"
-          SamlClaimType  = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+          Source        = "user"
+          ID            = "userPrincipalName"
+          SamlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
         },
 
         # Additional claim: surname
         {
-          Source         = "user"
-          ID             = "surname"
-          SamlClaimType  = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"
+          Source        = "user"
+          ID            = "surname"
+          SamlClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"
         }
       ]
     }
@@ -174,7 +174,7 @@ resource "azuread_service_principal_token_signing_certificate" "saml_signing_cer
   service_principal_id = azuread_service_principal.datadog_saml_auth_enterprise_application.id
 
   display_name = "CN=Data Dog SSO Certificate"
-  end_date     = "2028-06-01T00:00:00Z"
+  end_date     = var.saml_certificate_end_date
 }
 
 # Block 2: End.
