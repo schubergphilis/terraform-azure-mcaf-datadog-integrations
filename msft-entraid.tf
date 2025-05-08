@@ -41,7 +41,7 @@ resource "azuread_service_principal_password" "sp_password" {
 
 resource "azuread_application" "datadog_saml_auth_application_registration" {
   display_name            = "datadog-saml-auth"
-  identifier_uris         = ["https://app.datadoghq.eu/account/saml/metadata.xml"]
+#  identifier_uris         = ["https://app.datadoghq.eu/account/saml/metadata.xml"]
   owners                  = [data.azurerm_client_config.current.object_id]
   group_membership_claims = ["ApplicationGroup"]
 
