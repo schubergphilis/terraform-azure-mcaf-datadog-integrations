@@ -124,7 +124,6 @@ variable "saml_certificate_end_date" {
 variable "notification_email_addresses" {
   type        = list(string)
   description = "List of email addresses to receive SAML certificate expiry notifications."
-
   validation {
     condition = alltrue([
       for email in var.notification_email_addresses :
@@ -132,11 +131,5 @@ variable "notification_email_addresses" {
     ])
     error_message = "Each value in notification_email_addresses must be a valid email address."
   }
-
   default = []
 }
-
-# variable "managed_identity_display_name" {
-#   type        = string
-#   description = "The display name of the user assigned managed identity"
-# }
