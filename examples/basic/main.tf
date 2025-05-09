@@ -73,7 +73,7 @@ module "datadog_integration" {
     opsgenie_api_key_name = "opsgenie-api-key"
   }
 
-  notification_email_addresses = "user@contoso.com"
-  saml_certificate_end_date    = "2028-05-07T00:00:00Z"
+  saml_notification_email_addresses = "user@contoso.com"
+  saml_certificate_end_date         = "2028-05-07T00:00:00Z"
 
 }

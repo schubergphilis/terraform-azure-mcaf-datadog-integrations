@@ -121,15 +121,15 @@ variable "saml_certificate_end_date" {
     error_message = "Must be a valid UTC ISO 8601 timestamp, like 2028-05-07T00:00:00Z"
   }
 }
-variable "notification_email_addresses" {
-  type        = string
+variable "saml_notification_email_addresses" {
+  type        = list(string)
   description = "List of email addresses to receive SAML certificate expiry notifications."
   validation {
     condition = alltrue([
-      for email in var.notification_email_addresses :
+      for email in var.saml_notification_email_addresses :
       can(regex("^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$", email))
     ])
-    error_message = "Each value in notification_email_addresses must be a valid email address."
+    error_message = "Each value in saml_notification_email_addresses must be a valid email address."
   }
-  default = ""
+  default = [""]
 }
