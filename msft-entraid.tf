@@ -97,7 +97,7 @@ resource "azuread_service_principal" "datadog_saml_auth_enterprise_application" 
   app_role_assignment_required  = true
   login_url                     = "${local.datadog_app_url}/account/login/id/${datadog_organization_settings.organization.id}"
   preferred_single_sign_on_mode = "saml"
-  notification_email_addresses  = [var.notification_email_addresses]
+  notification_email_addresses  = var.notification_email_addresses
   feature_tags {
     enterprise            = true
     custom_single_sign_on = true
@@ -163,7 +163,7 @@ resource "azuread_service_principal_claims_mapping_policy_assignment" "app" {
 # Generate and assign a SAML token signing certificate
 resource "azuread_service_principal_token_signing_certificate" "saml_signing_cert" {
   service_principal_id = azuread_service_principal.datadog_saml_auth_enterprise_application.id
-  display_name         = "CN=Data Dog SSO Certificate"
+  display_name         = "CN=DataDog SAML SSO Certificate"
   end_date             = var.saml_certificate_end_date
 }
 

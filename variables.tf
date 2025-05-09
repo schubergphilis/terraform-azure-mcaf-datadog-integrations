@@ -122,7 +122,7 @@ variable "saml_certificate_end_date" {
   }
 }
 variable "notification_email_addresses" {
-  type        = list(string)
+  type        = string
   description = "List of email addresses to receive SAML certificate expiry notifications."
   validation {
     condition = alltrue([
@@ -131,5 +131,5 @@ variable "notification_email_addresses" {
     ])
     error_message = "Each value in notification_email_addresses must be a valid email address."
   }
-  default = []
+  default = ""
 }
