@@ -74,6 +74,10 @@ module "datadog_integration" {
   }
 
   saml_notification_email_addresses = "user@contoso.com"
+  
   saml_certificate_end_date         = "2028-05-07T00:00:00Z"
-
+  saml_assigned_groups = [
+    "sg-1",
+    "sg-2"
+  ]
 }
