@@ -77,7 +77,7 @@ resource "azuread_application" "datadog_saml_auth_application_registration" {
     id                   = "420578d9-e592-46f2-8e9e-c537e5e5ce76"
   }
   web {
-    homepage_url = "${local.datadog_app_url}/account/saml/assertion?metadata=datadog|ISV9.1|primary|z"
+    homepage_url = "https://www.datadog.com/"
     redirect_uris = [
       "${local.datadog_app_url}/account/saml/assertion"
     ]
@@ -165,6 +165,15 @@ resource "azuread_service_principal_token_signing_certificate" "saml_signing_cer
   service_principal_id = azuread_service_principal.datadog_saml_auth_enterprise_application.id
   display_name         = "CN=DataDog SAML SSO Certificate"
   end_date             = var.saml_certificate_end_date
+}
+
+# Assign Entra ID Groups to the Enterprise Application
+resource "azuread_app_role_assignment" "group_assignments" {
+  for_each = data.azuread_group.sso_groups
+
+  principal_object_id = each.value.id
+  app_role_id         = "00000000-0000-0000-0000-000000000000" # Default app role
+  resource_object_id  = azuread_service_principal.datadog_saml_auth_enterprise_application.id
 }
 
 # Block 2: End.

@@ -34,3 +34,8 @@ data "azurerm_key_vault_secret" "opsgenie_api_key" {
 data "datadog_permissions" "current" {
   include_restricted = true
 }
+
+data "azuread_group" "sso_groups" {
+  for_each     = toset(var.saml_assigned_groups)
+  display_name = each.key
+}

@@ -133,3 +133,7 @@ variable "saml_notification_email_addresses" {
   }
   default = [""]
 }
+variable "saml_assigned_groups" {
+  type        = list(string)
+  description = "List of Azure Entra ID group display names to assign to the Enterprise Application"
+}
