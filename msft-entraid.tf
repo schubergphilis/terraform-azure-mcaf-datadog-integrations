@@ -33,6 +33,7 @@ resource "azuread_service_principal_password" "sp_password" {
   rotate_when_changed = {
     rotation = time_rotating.rotation.id
   }
+  depends_on = [azuread_service_principal.spn]
 }
 
 # Block 1: End.
