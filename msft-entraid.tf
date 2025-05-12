@@ -26,16 +26,13 @@ resource "azuread_service_principal" "spn" {
 resource "time_rotating" "rotation" {
   rotation_days = 365
 }
-resource "time_static" "initial" {}
-resource "azuread_service_principal_password" "sp_password" {
-  display_name         = "datadog-service-principal-password"
-  service_principal_id = azuread_service_principal.spn.object_id
-    rotate_when_changed = {
-    rotation = time_static.initial.id
+
+resource "azuread_application_password" "app_password" {
+  display_name   = "datadog-monitoring-app-password"
+  application_id = azuread_application.application.id
+  rotate_when_changed = {
+    rotation = time_rotating.rotation.id
   }
-  # rotate_when_changed = {
-  #   rotation = time_rotating.rotation.id
-  # }
 }
 
 # Block 1: End.
