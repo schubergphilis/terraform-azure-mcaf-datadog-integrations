@@ -27,7 +27,7 @@ data "azurerm_key_vault_secret" "datadog_app_key" {
 data "azurerm_key_vault_secret" "opsgenie_api_key" {
   for_each = { for idx, opsgenie_integration in var.opsgenie_integration : idx => opsgenie_integration }
 
-  name         = each.value.name
+  name         = each.value.secret_name
   key_vault_id = data.azurerm_key_vault.this.id
 }
 

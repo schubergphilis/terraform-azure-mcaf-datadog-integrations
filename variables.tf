@@ -38,8 +38,9 @@ variable "datadog_teams" {
 variable "opsgenie_integration" {
   description = "OpsGenie integration configuration"
   type = list(object({
-    name   = string
-    region = string
+    name        = string
+    region      = string
+    secret_name = string
   }))
 }
 

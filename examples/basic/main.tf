@@ -40,8 +40,9 @@ module "datadog_integration" {
 
   opsgenie_integration = [
     {
-      name   = "tla-opsgenie"
-      region = "eu"
+      name        = "tla-opsgenie"
+      region      = "eu"
+      secret_name = "keyvault-opsgenie-secret"
     }
   ]
 
@@ -69,8 +70,8 @@ module "datadog_integration" {
   }
 
   key_vault_secrets_names = {
-    datadog_site_name     = "datadog-site"
-    datadog_api_key_name  = "datadog-api-key"
-    datadog_app_key_name  = "datadog-app-key"
+    datadog_site_name    = "datadog-site"
+    datadog_api_key_name = "datadog-api-key"
+    datadog_app_key_name = "datadog-app-key"
   }
 }
