@@ -16,13 +16,13 @@ variable "datadog_integration_azure_config" {
   })
 }
 
-variable "datadog_users_filter" {
-  description = "Datadog users filter"
-  type = object({
-    domain = string
-    status = string
-  })
-}
+# variable "datadog_users_filter" {
+#   description = "Datadog users filter"
+#   type = object({
+#     domain = string
+#     status = string
+#   })
+# }
 
 variable "datadog_teams" {
   description = "Datadog team configuration"
@@ -37,10 +37,11 @@ variable "datadog_teams" {
 # The variables below are for the integration of Datadog with Opsgenie
 variable "opsgenie_integration" {
   description = "OpsGenie integration configuration"
-  type = object({
-    name   = string
-    region = string
-  })
+  type = list(object({
+    name        = string
+    region      = string
+    secret_name = string
+  }))
 }
 
 # The variables below are for the integration of Datadog with Slack
@@ -92,10 +93,9 @@ variable "key_vault" {
 variable "key_vault_secrets_names" {
   description = "The names of the secrets stored in the Key Vault"
   type = object({
-    datadog_api_key_name  = string
-    datadog_app_key_name  = string
-    datadog_site_name     = string
-    opsgenie_api_key_name = optional(string, null)
+    datadog_api_key_name = string
+    datadog_app_key_name = string
+    datadog_site_name    = string
   })
 }
 
