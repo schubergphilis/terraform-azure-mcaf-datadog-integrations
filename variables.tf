@@ -95,7 +95,6 @@ variable "key_vault_secrets_names" {
     datadog_api_key_name = string
     datadog_app_key_name = string
     datadog_site_name    = string
-    #   opsgenie_api_key_name = optional(string, null)
   })
 }
 
