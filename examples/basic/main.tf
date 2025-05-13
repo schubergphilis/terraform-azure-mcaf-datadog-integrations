@@ -38,10 +38,12 @@ module "datadog_integration" {
     custom_metrics_enabled   = false
   }
 
-  opsgenie_integration = {
-    name   = "tla-opsgenie"
-    region = "eu"
-  }
+  opsgenie_integration = [
+    {
+      name   = "tla-opsgenie"
+      region = "eu"
+    }
+  ]
 
   slack_integration_pager = {
     account_name     = "contoso"
