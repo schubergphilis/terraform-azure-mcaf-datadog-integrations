@@ -92,9 +92,18 @@ resource "azuread_application" "datadog_saml_auth_application_registration" {
       id_token_issuance_enabled     = true
     }
   }
-
   feature_tags {
     enterprise = true
+  }
+  optional_claims {
+    saml2_token {
+      name = "groups"
+      essential = false
+      additional_properties = [
+        "sam_account_name",
+        "cloud_displayname"
+      ]
+    }
   }
 }
 resource "azuread_application_identifier_uri" "datadog_saml_auth_application_identifier_uri" {
