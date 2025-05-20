@@ -40,7 +40,7 @@ resource "azuread_application_password" "app_password" {
 # Block 2: Create a new Azure AD application for Datadog SAML SSO
 
 resource "azuread_application" "datadog_saml_auth_application_registration" {
-  display_name            = "datadog-saml-auth"
+  display_name            = "Datadog"
   identifier_uris         = ["https://app.datadoghq.eu/accounts/saml/metadata.xml"]
   owners                  = [data.azurerm_client_config.current.object_id]
   group_membership_claims = ["ApplicationGroup"]
