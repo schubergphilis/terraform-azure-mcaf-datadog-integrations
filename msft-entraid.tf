@@ -41,7 +41,7 @@ resource "azuread_application_password" "app_password" {
 
 resource "azuread_application" "datadog_saml_auth_application_registration" {
   display_name            = "Datadog"
-  logo_image              = filebase64(".terraform/modules/datadog_integration/dd_icon_rgb.png")
+  logo_image              = filebase64("/dd_icon_rgb.png")
   identifier_uris         = ["https://app.datadoghq.eu/account/saml/metadata.xml"]
   owners                  = [data.azurerm_client_config.current.object_id]
   group_membership_claims = ["ApplicationGroup"]
@@ -180,7 +180,7 @@ resource "azuread_service_principal_claims_mapping_policy_assignment" "app" {
   claims_mapping_policy_id = azuread_claims_mapping_policy.datadog_saml_auth_claims_mapping_policy.id
   service_principal_id     = azuread_service_principal.datadog_saml_auth_enterprise_application.id
 }
-# Generate and assign a SAML token signing certificate
+# Generate and assign a SAML token signing certificate (End Date Validity is 3 years max)
 resource "azuread_service_principal_token_signing_certificate" "saml_signing_cert" {
   service_principal_id = azuread_service_principal.datadog_saml_auth_enterprise_application.id
   display_name         = "CN=DataDog SAML SSO Certificate"
