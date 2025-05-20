@@ -83,7 +83,7 @@ resource "azuread_application" "datadog_saml_auth_application_registration" {
     id                   = "79e5a395-7ebc-4720-9a99-039e9bd57f0e"
   }
   web {
-    homepage_url = "https://www.datadog.com/"
+    homepage_url = "https://app.datadoghq.com/account/saml/assertion?metadata=datadog|ISV9.1|primary|z"
     redirect_uris = [
       "${local.datadog_app_url}/account/saml/assertion"
     ]
