@@ -98,7 +98,7 @@ resource "azuread_application" "datadog_saml_auth_application_registration" {
   }
 }
 resource "azuread_application_identifier_uri" "datadog_saml_auth_application_identifier_uri" {
-  application_id = azuread_application.application.id
+  application_id = azuread_application.datadog_saml_auth_application_registration.id
   identifier_uri = "https://app.datadoghq.eu/account/saml/metadata.xml"
 }
 
