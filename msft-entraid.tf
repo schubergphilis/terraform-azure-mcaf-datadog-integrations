@@ -41,6 +41,7 @@ resource "azuread_application_password" "app_password" {
 
 resource "azuread_application" "datadog_saml_auth_application_registration" {
   display_name            = "Datadog"
+  logo_image              = null
   identifier_uris         = ["https://app.datadoghq.eu/account/saml/metadata.xml"]
   owners                  = [data.azurerm_client_config.current.object_id]
   group_membership_claims = ["ApplicationGroup"]
