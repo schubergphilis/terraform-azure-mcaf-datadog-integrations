@@ -28,11 +28,16 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [azuread_app_role_assignment.group_assignments](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/app_role_assignment) | resource |
 | [azuread_application.application](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/application) | resource |
 | [azuread_application.datadog_saml_auth_application_registration](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/application) | resource |
+| [azuread_application_identifier_uri.datadog_saml_auth_application_identifier_uri](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/application_identifier_uri) | resource |
+| [azuread_application_password.app_password](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/application_password) | resource |
+| [azuread_claims_mapping_policy.datadog_saml_auth_claims_mapping_policy](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/claims_mapping_policy) | resource |
 | [azuread_service_principal.datadog_saml_auth_enterprise_application](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/service_principal) | resource |
 | [azuread_service_principal.spn](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/service_principal) | resource |
-| [azuread_service_principal_password.sp_password](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/service_principal_password) | resource |
+| [azuread_service_principal_claims_mapping_policy_assignment.app](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/service_principal_claims_mapping_policy_assignment) | resource |
+| [azuread_service_principal_token_signing_certificate.saml_signing_cert](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/service_principal_token_signing_certificate) | resource |
 | [azurerm_role_assignment.datadog](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 | [datadog_integration_azure.this](https://registry.terraform.io/providers/datadog/datadog/latest/docs/resources/integration_azure) | resource |
 | [datadog_integration_opsgenie_service_object.opsgenie_integration](https://registry.terraform.io/providers/datadog/datadog/latest/docs/resources/integration_opsgenie_service_object) | resource |
@@ -42,6 +47,7 @@ No modules.
 | [datadog_role.enhanced_reader](https://registry.terraform.io/providers/datadog/datadog/latest/docs/resources/role) | resource |
 | [datadog_team.teams](https://registry.terraform.io/providers/datadog/datadog/latest/docs/resources/team) | resource |
 | [time_rotating.rotation](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/rotating) | resource |
+| [azuread_group.sso_groups](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/group) | data source |
 | [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) | data source |
 | [azurerm_key_vault.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/key_vault) | data source |
 | [azurerm_key_vault_secret.datadog_api_key](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/key_vault_secret) | data source |
