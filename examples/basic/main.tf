@@ -9,11 +9,6 @@ module "datadog_integration" {
 
   tenant_root_management_group_name = "myRootManagementGroup"
 
-  #datadog_users_filter = {
-  #  domain = "*@contoso.com"
-  #  status = "Active,Pending"
-  #}
-
   datadog_teams = {
     tla-mce = {
       description = "Contoso Engineering"
