@@ -98,7 +98,7 @@ resource "azuread_application" "datadog_saml_auth_application_registration" {
   }
   optional_claims {
     saml2_token {
-      name = "groups"
+      name      = "groups"
       essential = false
       additional_properties = [
         "sam_account_name",
