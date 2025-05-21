@@ -9,11 +9,6 @@ data "azurerm_key_vault" "this" {
   resource_group_name = var.key_vault.resource_group_name
 }
 
-data "azurerm_key_vault_secret" "datadog_site_name" {
-  name         = var.key_vault_secrets_names.datadog_site_name
-  key_vault_id = data.azurerm_key_vault.this.id
-}
-
 data "azurerm_key_vault_secret" "datadog_api_key" {
   name         = var.key_vault_secrets_names.datadog_api_key_name
   key_vault_id = data.azurerm_key_vault.this.id

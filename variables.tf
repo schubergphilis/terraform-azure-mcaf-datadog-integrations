@@ -86,7 +86,6 @@ variable "key_vault_secrets_names" {
   type = object({
     datadog_api_key_name  = string
     datadog_app_key_name  = string
-    datadog_site_name     = string
     opsgenie_api_key_name = optional(string, null)
   })
 }
@@ -134,4 +133,10 @@ variable "path_to_ddog_icon" {
   type        = string
   description = "Path to the Datadog icon file"
   default     = "/dd_icon_rgb.png"
+}
+
+variable "datadog_site_name" {
+  description = "Datadog site name"
+  type        = string
+  default     = "datadoghq.eu"
 }

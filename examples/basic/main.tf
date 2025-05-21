@@ -67,7 +67,6 @@ module "datadog_integration" {
   }
 
   key_vault_secrets_names = {
-    datadog_site_name     = "datadog-site"
     datadog_api_key_name  = "datadog-api-key"
     datadog_app_key_name  = "datadog-app-key"
     opsgenie_api_key_name = "opsgenie-api-key"
