@@ -129,3 +129,9 @@ variable "saml_assigned_groups" {
   type        = list(string)
   description = "List of Azure Entra ID group display names to assign to the Enterprise Application"
 }
+
+variable "path_to_ddog_icon" {
+  type        = string
+  description = "Path to the Datadog icon file"
+  default     = "/dd_icon_rgb.png"
+}
