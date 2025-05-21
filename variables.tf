@@ -16,14 +16,6 @@ variable "datadog_integration_azure_config" {
   })
 }
 
-variable "datadog_users_filter" {
-  description = "Datadog users filter"
-  type = object({
-    domain = string
-    status = string
-  })
-}
-
 variable "datadog_teams" {
   description = "Datadog team configuration"
   type = map(
