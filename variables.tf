@@ -29,10 +29,11 @@ variable "datadog_teams" {
 # The variables below are for the integration of Datadog with Opsgenie
 variable "opsgenie_integration" {
   description = "OpsGenie integration configuration"
-  type = object({
-    name   = string
-    region = string
-  })
+  type = list(object({
+    name        = string
+    region      = string
+    secret_name = string
+  }))
 }
 
 # The variables below are for the integration of Datadog with Slack
@@ -86,7 +87,6 @@ variable "key_vault_secrets_names" {
   type = object({
     datadog_api_key_name  = string
     datadog_app_key_name  = string
-    opsgenie_api_key_name = optional(string, null)
   })
 }
 

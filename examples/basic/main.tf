@@ -33,10 +33,13 @@ module "datadog_integration" {
     custom_metrics_enabled   = false
   }
 
-  opsgenie_integration = {
-    name   = "tla-opsgenie"
-    region = "eu"
-  }
+  opsgenie_integration = [
+    {
+      name        = "tla-opsgenie"
+      region      = "eu"
+      secret_name = "keyvault-opsgenie-secret"
+    }
+  ]
 
   slack_integration_pager = {
     account_name     = "contoso"
@@ -64,7 +67,6 @@ module "datadog_integration" {
   key_vault_secrets_names = {
     datadog_api_key_name  = "datadog-api-key"
     datadog_app_key_name  = "datadog-app-key"
-    opsgenie_api_key_name = "opsgenie-api-key"
   }
 
   saml_notification_email_addresses = ["user@contoso.com"]
